@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naranjas de Hiroshima — Archivo Streaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --negro:#080808;
+  --carbon:#141414;
+  --celuloide:#1E1E1E;
+  --naranja:#E8631A;
+  --naranja-suave:#C4541400;
+  --crema:#F0E6D0;
+  --crema-suave:#b8a98a;
+  --gris:#888;
+  --borde:#2A2A2A;
+}
+
+html{background:var(--negro);color:var(--crema);font-family:'Inter',sans-serif;scroll-behavior:smooth}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,8,8,0.96);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--borde);
+  padding:0 2rem;
+  display:flex;align-items:center;gap:2rem;height:60px;
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;font-weight:700;
+  color:var(--naranja);letter-spacing:0.04em;
+  white-space:nowrap;text-decoration:none;
+  flex-shrink:0;
+}
+.logo span{font-style:italic;font-weight:400;color:var(--crema-suave);font-size:0.85rem;margin-left:0.5rem}
+.header-search{
+  flex:1;max-width:400px;
+  position:relative;
+}
+.header-search input{
+  width:100%;background:var(--celuloide);
+  border:1px solid var(--borde);
+  color:var(--crema);padding:0.45rem 0.9rem 0.45rem 2.2rem;
+  border-radius:2px;font-size:0.85rem;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color 0.2s;
+}
+.header-search input:focus{border-color:var(--naranja)}
+.header-search input::placeholder{color:var(--gris)}
+.search-icon{position:absolute;left:0.65rem;top:50%;transform:translateY(-50%);color:var(--gris);font-size:0.85rem}
+.header-stats{margin-left:auto;font-size:0.75rem;color:var(--gris);white-space:nowrap}
+.header-stats strong{color:var(--naranja)}
+
+/* ── HERO ── */
+.hero{
+  background:var(--negro);
+  padding:3rem 2rem 2.5rem;
+  border-bottom:1px solid var(--borde);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:40%;
+  background:radial-gradient(ellipse at right center, rgba(232,99,26,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+/* Perforaciones de celuloide — firma visual */
+.sprockets{
+  position:absolute;left:0;top:0;bottom:0;width:22px;
+  display:flex;flex-direction:column;justify-content:space-evenly;padding:1rem 0;
+  pointer-events:none;
+}
+.sprockets span{
+  display:block;width:10px;height:10px;
+  border-radius:2px;background:var(--borde);
+  margin:0 auto;
+}
+.hero-inner{padding-left:2rem}
+.hero-eyebrow{
+  font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--naranja);margin-bottom:0.75rem;font-weight:500;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:700;line-height:1.1;
+  color:var(--crema);margin-bottom:0.75rem;
+}
+.hero h1 em{color:var(--naranja);font-style:italic}
+.hero-quote{
+  font-family:'Playfair Display',serif;
+  font-style:italic;font-size:0.95rem;
+  color:var(--crema-suave);max-width:560px;line-height:1.6;
+  border-left:2px solid var(--naranja);padding-left:1rem;
+  margin-top:1.2rem;
+}
+.hero-quote cite{display:block;font-style:normal;font-size:0.75rem;margin-top:0.4rem;color:var(--gris);letter-spacing:0.05em}
+
+/* ── FILTROS ── */
+.filters-bar{
+  background:var(--carbon);
+  border-bottom:1px solid var(--borde);
+  padding:0.85rem 2rem;
+  display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;
+}
+.filter-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gris);margin-right:0.3rem;flex-shrink:0}
+.tag-btn{
+  font-size:0.72rem;padding:0.28rem 0.7rem;
+  border:1px solid var(--borde);border-radius:1px;
+  background:transparent;color:var(--crema-suave);
+  cursor:pointer;transition:all 0.15s;font-family:'Inter',sans-serif;
+  letter-spacing:0.02em;
+}
+.tag-btn:hover{border-color:var(--naranja);color:var(--naranja)}
+.tag-btn.active{background:var(--naranja);border-color:var(--naranja);color:#fff}
+.filter-sep{width:1px;height:20px;background:var(--borde);flex-shrink:0;margin:0 0.3rem}
+.clear-btn{
+  font-size:0.7rem;color:var(--gris);background:none;border:none;
+  cursor:pointer;font-family:'Inter',sans-serif;padding:0.28rem 0;
+  margin-left:0.5rem;text-decoration:underline;
+}
+.clear-btn:hover{color:var(--crema)}
+
+/* ── GRID ── */
+.grid-wrap{padding:1.5rem 2rem 4rem}
+.grid-header{
+  display:flex;align-items:baseline;gap:1rem;
+  margin-bottom:1.2rem;
+}
+.grid-count{font-size:0.78rem;color:var(--gris)}
+.grid-count strong{color:var(--crema)}
+.sort-select{
+  margin-left:auto;background:var(--celuloide);border:1px solid var(--borde);
+  color:var(--crema-suave);font-size:0.75rem;padding:0.3rem 0.6rem;
+  border-radius:1px;font-family:'Inter',sans-serif;cursor:pointer;outline:none;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1px;
+  background:var(--borde);
+}
+
+/* ── CARD ── */
+.card{
+  background:var(--carbon);
+  cursor:pointer;position:relative;
+  transition:transform 0.18s,z-index 0s 0.18s;
+}
+.card:hover{transform:scale(1.04);z-index:10;transition:transform 0.18s,z-index 0s}
+.card-poster{
+  aspect-ratio:2/3;
+  background:var(--celuloide);
+  position:relative;overflow:hidden;
+}
+.card-poster img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;transition:opacity 0.3s;
+}
+.card-poster img.loading{opacity:0}
+.card-poster img.loaded{opacity:1}
+/* poster fallback */
+.card-poster .fallback{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:1rem;text-align:center;
+  background:var(--celuloide);
+}
+.fallback-title{
+  font-family:'Playfair Display',serif;
+  font-size:0.75rem;line-height:1.3;
+  color:var(--crema);font-weight:700;
+}
+.fallback-year{font-size:0.65rem;color:var(--naranja);margin-top:0.4rem}
+.fallback-icon{font-size:1.8rem;margin-bottom:0.5rem;opacity:0.3}
+
+.card-badge{
+  position:absolute;top:0.4rem;left:0.4rem;
+  font-size:0.58rem;padding:0.18rem 0.45rem;
+  border-radius:1px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;
+}
+.badge-play{background:var(--naranja);color:#fff}
+.badge-ndh{background:rgba(232,99,26,0.2);border:1px solid var(--naranja);color:var(--naranja)}
+
+.card-hover-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 50%);
+  opacity:0;transition:opacity 0.18s;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0.6rem;
+}
+.card:hover .card-hover-overlay{opacity:1}
+.hover-play{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--naranja);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 0.5rem;
+  font-size:0.9rem;padding-left:3px;
+}
+.hover-tags{display:flex;flex-wrap:wrap;gap:3px}
+.hover-tag{
+  font-size:0.58rem;background:rgba(255,255,255,0.1);
+  padding:1px 5px;border-radius:1px;color:var(--crema-suave);
+}
+
+.card-info{padding:0.55rem 0.6rem 0.65rem}
+.card-title{
+  font-family:'Playfair Display',serif;
+  font-size:0.78rem;font-weight:700;
+  color:var(--crema);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-meta{
+  font-size:0.65rem;color:var(--gris);
+  margin-top:0.3rem;display:flex;gap:0.5rem;align-items:center;
+}
+.card-year{color:var(--naranja);font-weight:500}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.88);
+  display:none;align-items:center;justify-content:center;
+  padding:1.5rem;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--carbon);
+  border:1px solid var(--borde);
+  max-width:780px;width:100%;max-height:90vh;overflow-y:auto;
+  position:relative;
+}
+.modal-close{
+  position:absolute;top:0.75rem;right:0.75rem;
+  background:none;border:none;color:var(--gris);
+  font-size:1.2rem;cursor:pointer;z-index:10;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{color:var(--crema)}
+.modal-video{
+  width:100%;aspect-ratio:16/9;background:#000;
+}
+.modal-video iframe{width:100%;height:100%;border:none;display:block}
+.modal-body{padding:1.25rem 1.5rem 1.5rem}
+.modal-eyebrow{
+  font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--naranja);margin-bottom:0.4rem;
+}
+.modal-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;font-weight:700;color:var(--crema);
+  line-height:1.2;margin-bottom:0.2rem;
+}
+.modal-subtitle{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:0.9rem;color:var(--crema-suave);margin-bottom:1rem;
+}
+.modal-meta-row{
+  display:flex;flex-wrap:wrap;gap:1.2rem;
+  margin-bottom:1rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--borde);
+}
+.modal-meta-item label{display:block;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gris);margin-bottom:0.2rem}
+.modal-meta-item span{font-size:0.82rem;color:var(--crema)}
+.modal-sinopsis{
+  font-size:0.85rem;line-height:1.7;color:var(--crema-suave);
+  margin-bottom:1.2rem;
+}
+.modal-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem}
+.modal-tag{
+  font-size:0.65rem;padding:0.2rem 0.55rem;
+  border:1px solid var(--borde);color:var(--gris);
+  cursor:pointer;transition:all 0.15s;
+}
+.modal-tag:hover{border-color:var(--naranja);color:var(--naranja)}
+.modal-actions{display:flex;gap:0.75rem;flex-wrap:wrap}
+.btn-primary{
+  font-size:0.8rem;padding:0.55rem 1.1rem;
+  background:var(--naranja);color:#fff;border:none;
+  cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;
+  letter-spacing:0.03em;text-decoration:none;display:inline-block;
+  transition:opacity 0.15s;
+}
+.btn-primary:hover{opacity:0.85}
+.btn-secondary{
+  font-size:0.8rem;padding:0.55rem 1.1rem;
+  background:transparent;color:var(--crema-suave);
+  border:1px solid var(--borde);cursor:pointer;
+  font-family:'Inter',sans-serif;
+  text-decoration:none;display:inline-block;
+  transition:border-color 0.15s;
+}
+.btn-secondary:hover{border-color:var(--naranja);color:var(--crema)}
+.no-video-note{
+  background:var(--celuloide);padding:1rem 1.2rem;
+  font-size:0.78rem;color:var(--gris);
+  border-left:2px solid var(--borde);margin-bottom:1rem;
+}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:5rem 2rem;color:var(--gris)}
+.empty h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--crema-suave);margin-bottom:0.5rem}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--negro)}
+::-webkit-scrollbar-thumb{background:var(--borde);border-radius:2px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hero{padding:2rem 1rem 1.5rem}
+  .hero-inner{padding-left:1.5rem}
+  .filters-bar,.grid-wrap{padding-left:1rem;padding-right:1rem}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">Naranjas de Hiroshima <span>/ Archivo Streaming</span></a>
+  <div class="header-search">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Buscar título, director, país…">
+  </div>
+  <div class="header-stats" id="headerStats"></div>
+</header>
+
+<section class="hero">
+  <div class="sprockets" id="sprockets"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Desde 2007 · Cine Documental</div>
+    <h1>Archivo de <em>562</em><br>documentales</h1>
+    <blockquote class="hero-quote" id="heroQuote">
+      "Un país que no tiene cine documental es como una familia sin álbum familiar."
+      <cite>— Patricio Guzmán</cite>
+    </blockquote>
+  </div>
+</section>
+
+<div class="filters-bar" id="filtersBar">
+  <span class="filter-label">Filtrar:</span>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid-header">
+    <span class="grid-count" id="gridCount"></span>
+    <select class="sort-select" id="sortSelect">
+      <option value="reciente">Más recientes en NdH</option>
+      <option value="anio_asc">Año (antiguo → nuevo)</option>
+      <option value="anio_desc">Año (nuevo → antiguo)</option>
+      <option value="titulo">Título A–Z</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <h3>Sin resultados</h3>
+    <p>Prueba con otros filtros o términos de búsqueda.</p>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-video" id="modalVideo"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const CATALOG_URL = 'catalog.json';
+const QUOTES = [
+  {q:"Un país que no tiene cine documental es como una familia sin álbum familiar.", a:"Patricio Guzmán"},
+  {q:"El documental no es la verdad, pero puede ser más honesto que la ficción.", a:"Werner Herzog"},
+  {q:"La cámara es un objeto que miente.", a:"Glauber Rocha"},
+  {q:"Soy un ojo fílmico, soy un ojo mecánico, una máquina que os muestra el mundo solamente como yo puedo verlo.", a:"Dziga Vertov"},
+  {q:"Nosotros no hacemos films para morir, sino para vivir, para vivir mejor.", a:"Fernando Birri"},
+];
+const TOP_TAGS = [
+  'Carteles Naranjas','Documental Musical','Documental Militante','Directoras','Mujeres',
+  'Latinoamerica','Mexico','España','Cuba','Argentina','Chile',
+  '1920s','1930s','1950s','1960s','1970s','1980s','1990s','2000s','2010s',
+  'Origenes del Cine Documental','Material de Archivo','Cine Experimental',
+  'Antisistema','Capitalismo','Dictadura','Revolución Española 1936-1939 y Posguerra',
+  'Documentales sobre Artistas','Documental Antropologico','Jazz','Creative Commons'
+];
+
+// ── STATE ──
+let allDocs = [];
+let activeTags = new Set();
+let searchQuery = '';
+let sortMode = 'reciente';
+let currentDoc = null;
+
+// ── INIT ──
+async function init() {
+  // Sprockets
+  const sp = document.getElementById('sprockets');
+  for(let i=0;i<12;i++) sp.innerHTML += '<span></span>';
+
+  // Quote rotation
+  const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('heroQuote').innerHTML =
+    `"${q.q}" <cite>— ${q.a}</cite>`;
+
+  // Load catalog
+  try {
+    const r = await fetch(CATALOG_URL);
+    const d = await r.json();
+    allDocs = d.docs || [];
+  } catch(e) {
+    // demo fallback — muestra mensaje
+    document.getElementById('grid').innerHTML =
+      '<div style="grid-column:1/-1;padding:3rem;text-align:center;color:#888">Coloca catalog.json en la misma carpeta que este HTML.</div>';
+    return;
+  }
+
+  buildFilters();
+  renderGrid();
+
+  document.getElementById('headerStats').innerHTML =
+    `<strong>${allDocs.filter(d=>d.reproducible).length}</strong> reproducibles · <strong>${allDocs.length}</strong> total`;
+}
+
+// ── FILTERS ──
+function buildFilters() {
+  const bar = document.getElementById('filtersBar');
+  TOP_TAGS.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.textContent = tag;
+    btn.onclick = () => toggleTag(tag, btn);
+    btn.id = 'tag_' + tag.replace(/\s/g,'_');
+    bar.appendChild(btn);
+  });
+  const sep = document.createElement('span');
+  sep.className = 'filter-sep';
+  bar.appendChild(sep);
+  const cl = document.createElement('button');
+  cl.className = 'clear-btn';
+  cl.textContent = 'Limpiar filtros';
+  cl.onclick = clearFilters;
+  bar.appendChild(cl);
+}
+
+function toggleTag(tag, btn) {
+  if(activeTags.has(tag)) { activeTags.delete(tag); btn.classList.remove('active'); }
+  else { activeTags.add(tag); btn.classList.add('active'); }
+  renderGrid();
+}
+
+function clearFilters() {
+  activeTags.clear();
+  document.querySelectorAll('.tag-btn.active').forEach(b=>b.classList.remove('active'));
+  searchQuery = '';
+  document.getElementById('searchInput').value = '';
+  renderGrid();
+}
+
+// ── FILTER + SORT ──
+function getFiltered() {
+  let docs = allDocs.slice();
+  if(activeTags.size) {
+    docs = docs.filter(d => [...activeTags].every(t => d.tags.includes(t)));
+  }
+  if(searchQuery) {
+    const q = searchQuery.toLowerCase();
+    docs = docs.filter(d =>
+      (d.titulo||'').toLowerCase().includes(q) ||
+      (d.titulo_original||'').toLowerCase().includes(q) ||
+      (d.direccion||'').toLowerCase().includes(q) ||
+      (d.pais||'').toLowerCase().includes(q)
+    );
+  }
+  // Sort
+  if(sortMode === 'anio_asc') docs.sort((a,b) => parseInt(a.anio)||9999 - parseInt(b.anio)||9999);
+  else if(sortMode === 'anio_desc') docs.sort((a,b) => parseInt(b.anio)||0 - parseInt(a.anio)||0);
+  else if(sortMode === 'titulo') docs.sort((a,b) => (a.titulo||'').localeCompare(b.titulo||'', 'es'));
+  else docs.sort((a,b) => (b.fecha_pub||'').localeCompare(a.fecha_pub||''));
+  return docs;
+}
+
+// ── RENDER ──
+function renderGrid() {
+  const docs = getFiltered();
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const count = document.getElementById('gridCount');
+
+  count.innerHTML = `<strong>${docs.length}</strong> documentales`;
+  if(!docs.length) { grid.style.display='none'; empty.style.display='block'; return; }
+  grid.style.display='grid'; empty.style.display='none';
+
+  // Build cards
+  grid.innerHTML = docs.map(doc => cardHTML(doc)).join('');
+
+  // Lazy load images
+  grid.querySelectorAll('img[data-src]').forEach(img => {
+    const obs = new IntersectionObserver(entries => {
+      if(entries[0].isIntersecting) {
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.replace('loading','loaded');
+        img.onerror = () => { img.style.display='none'; img.closest('.card-poster').querySelector('.fallback').style.display='flex'; };
+        obs.disconnect();
+      }
+    }, {rootMargin:'200px'});
+    obs.observe(img);
+  });
+
+  // Click handlers
+  grid.querySelectorAll('.card').forEach((card, i) => {
+    card.onclick = () => openModal(docs[i]);
+  });
+}
+
+function cardHTML(doc) {
+  const year = (doc.anio||'').split('-')[0].trim();
+  const badgePlay = doc.reproducible ? '<span class="card-badge badge-play">▶</span>' : '';
+  const badgeNdh = doc.caratula_ndh ? '<span class="card-badge badge-ndh" style="top:0.4rem;right:0.4rem;left:auto">NdH</span>' : '';
+
+  const imgTag = doc.imagen
+    ? `<img class="loading" data-src="${doc.imagen}" alt="${esc(doc.titulo)}" loading="lazy">`
+    : '';
+  const fallbackStyle = doc.imagen ? 'display:none' : '';
+
+  const previewTags = (doc.tags||[]).slice(0,3).map(t=>`<span class="hover-tag">${esc(t)}</span>`).join('');
+  const playBtn = doc.reproducible ? '<div class="hover-play">▶</div>' : '';
+
+  return `<div class="card" title="${esc(doc.titulo)}">
+    <div class="card-poster">
+      ${imgTag}
+      <div class="fallback" style="${fallbackStyle}">
+        <div class="fallback-icon">🎞</div>
+        <div class="fallback-title">${esc(doc.titulo)}</div>
+        <div class="fallback-year">${year}</div>
+      </div>
+      ${badgePlay}${badgeNdh}
+      <div class="card-hover-overlay">
+        ${playBtn}
+        <div class="hover-tags">${previewTags}</div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">${esc(doc.titulo)}</div>
+      <div class="card-meta">
+        <span class="card-year">${year}</span>
+        <span>${esc(doc.pais||'').split(',')[0].trim()}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── MODAL ──
+function openModal(doc) {
+  currentDoc = doc;
+  const bg = document.getElementById('modalBg');
+  const videoEl = document.getElementById('modalVideo');
+  const body = document.getElementById('modalBody');
+
+  // Video
+  if(doc.youtube_id) {
+    videoEl.style.display='block';
+    videoEl.innerHTML = `<iframe src="https://www.youtube.com/embed/${doc.youtube_id}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen></iframe>`;
+  } else if(doc.vimeo_id) {
+    videoEl.style.display='block';
+    videoEl.innerHTML = `<iframe src="https://player.vimeo.com/video/${doc.vimeo_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
+  } else {
+    videoEl.style.display='none';
+    videoEl.innerHTML='';
+  }
+
+  // Meta
+  const year = (doc.anio||'').trim();
+  const titulo_orig = doc.titulo_original && doc.titulo_original !== doc.titulo ? `<div class="modal-subtitle">${esc(doc.titulo_original)}</div>` : '';
+  const noVideo = !doc.reproducible ? `<div class="no-video-note">Este documental no tiene video disponible en línea. Visita la reseña en Naranjas de Hiroshima para más información.</div>` : '';
+  const tags = (doc.tags||[]).map(t=>`<span class="modal-tag" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');
+  const sinopsis = doc.sinopsis ? `<p class="modal-sinopsis">${esc(doc.sinopsis)}${doc.sinopsis.length >= 598 ? '…' : ''}</p>` : '';
+
+  body.innerHTML = `
+    <div class="modal-eyebrow">Naranjas de Hiroshima</div>
+    <h2 class="modal-title">${esc(doc.titulo)}</h2>
+    ${titulo_orig}
+    <div class="modal-meta-row">
+      ${year ? `<div class="modal-meta-item"><label>Año</label><span>${esc(year)}</span></div>` : ''}
+      ${doc.pais ? `<div class="modal-meta-item"><label>País</label><span>${esc(doc.pais)}</span></div>` : ''}
+      ${doc.direccion ? `<div class="modal-meta-item"><label>Dirección</label><span>${esc(doc.direccion)}</span></div>` : ''}
+      ${doc.duracion ? `<div class="modal-meta-item"><label>Duración</label><span>${esc(doc.duracion)}</span></div>` : ''}
+    </div>
+    ${noVideo}
+    ${sinopsis}
+    <div class="modal-tags">${tags}</div>
+    <div class="modal-actions">
+      ${doc.url_ndh ? `<a class="btn-primary" href="${doc.url_ndh}" target="_blank" rel="noopener">Ver reseña en NdH →</a>` : ''}
+      <button class="btn-secondary" onclick="closeModal()">Cerrar</button>
+    </div>`;
+
+  bg.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  document.getElementById('modalVideo').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function filterByTag(tag) {
+  closeModal();
+  if(!activeTags.has(tag)) {
+    activeTags.add(tag);
+    const btn = document.getElementById('tag_' + tag.replace(/\s/g,'_'));
+    if(btn) btn.classList.add('active');
+  }
+  renderGrid();
+  document.querySelector('.filters-bar').scrollIntoView({behavior:'smooth'});
+}
+
+// ── EVENTS ──
+document.getElementById('modalBg').onclick = e => { if(e.target===e.currentTarget) closeModal(); };
+document.getElementById('modalClose').onclick = closeModal;
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  renderGrid();
+});
+document.getElementById('sortSelect').addEventListener('change', e => {
+  sortMode = e.target.value;
+  renderGrid();
+});
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>
