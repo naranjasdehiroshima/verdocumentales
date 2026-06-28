@@ -604,6 +604,12 @@ function openModal(doc) {
   } else if(doc.vimeo_id) {
     videoEl.style.display='block';
     videoEl.innerHTML = `<iframe src="https://player.vimeo.com/video/${doc.vimeo_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
+  } else if(doc.okru_id) {
+    videoEl.style.display='block';
+    videoEl.innerHTML = `<iframe src="https://ok.ru/videoembed/${doc.okru_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen frameborder="0"></iframe>`;
+  } else if(doc.dailymotion_id) {
+    videoEl.style.display='block';
+    videoEl.innerHTML = `<iframe src="https://www.dailymotion.com/embed/video/${doc.dailymotion_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen frameborder="0"></iframe>`;
   } else {
     videoEl.style.display='none';
     videoEl.innerHTML='';
