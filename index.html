@@ -597,19 +597,16 @@ function openModal(doc) {
   const videoEl = document.getElementById('modalVideo');
   const body = document.getElementById('modalBody');
 
-  // Video
-  if(doc.youtube_id) {
+  // Video — prioridad: ok.ru > Vimeo > Dailymotion > YouTube
+  const embedUrls = {
+    youtube:     id => `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`,
+    vimeo:       id => `https://player.vimeo.com/video/${id}?autoplay=1`,
+    okru:        id => `https://ok.ru/videoembed/${id}?autoplay=1`,
+    dailymotion: id => `https://www.dailymotion.com/embed/video/${id}?autoplay=1`,
+  };
+  if(doc.embed_type && doc.embed_id && embedUrls[doc.embed_type]) {
     videoEl.style.display='block';
-    videoEl.innerHTML = `<iframe src="https://www.youtube.com/embed/${doc.youtube_id}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen></iframe>`;
-  } else if(doc.vimeo_id) {
-    videoEl.style.display='block';
-    videoEl.innerHTML = `<iframe src="https://player.vimeo.com/video/${doc.vimeo_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
-  } else if(doc.okru_id) {
-    videoEl.style.display='block';
-    videoEl.innerHTML = `<iframe src="https://ok.ru/videoembed/${doc.okru_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen frameborder="0"></iframe>`;
-  } else if(doc.dailymotion_id) {
-    videoEl.style.display='block';
-    videoEl.innerHTML = `<iframe src="https://www.dailymotion.com/embed/video/${doc.dailymotion_id}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen frameborder="0"></iframe>`;
+    videoEl.innerHTML = `<iframe src="${embedUrls[doc.embed_type](doc.embed_id)}" allow="autoplay;encrypted-media;fullscreen" allowfullscreen frameborder="0"></iframe>`;
   } else {
     videoEl.style.display='none';
     videoEl.innerHTML='';
