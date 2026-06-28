@@ -60,27 +60,53 @@ header{
 /* ── HERO ── */
 .hero{
   background:var(--negro);
-  padding:3rem 2rem 2.5rem;
   border-bottom:1px solid var(--borde);
   position:relative;overflow:hidden;
 }
-.hero::before{
-  content:'';position:absolute;top:0;right:0;bottom:0;width:40%;
-  background:radial-gradient(ellipse at right center, rgba(232,99,26,0.06) 0%, transparent 70%);
-  pointer-events:none;
+/* Banner imagen de fondo */
+.hero-banner{
+  position:relative;
+  width:100%;
+  min-height:260px;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.hero-banner img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center 30%;
+  display:block;
+}
+/* Overlay negro degradado — texto legible sobre la imagen */
+.hero-banner::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(
+    to right,
+    rgba(8,8,8,0.92) 0%,
+    rgba(8,8,8,0.75) 50%,
+    rgba(8,8,8,0.88) 100%
+  );
+}
+.hero-banner::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60px;z-index:2;
+  background:linear-gradient(to bottom, transparent, var(--negro));
 }
 /* Perforaciones de celuloide — firma visual */
 .sprockets{
-  position:absolute;left:0;top:0;bottom:0;width:22px;
+  position:absolute;left:0;top:0;bottom:0;width:22px;z-index:3;
   display:flex;flex-direction:column;justify-content:space-evenly;padding:1rem 0;
   pointer-events:none;
 }
 .sprockets span{
   display:block;width:10px;height:10px;
-  border-radius:2px;background:var(--borde);
+  border-radius:2px;background:rgba(255,255,255,0.15);
   margin:0 auto;
 }
-.hero-inner{padding-left:2rem}
+.hero-inner{
+  position:relative;z-index:3;
+  padding:2.5rem 2rem 2.5rem 2.5rem;
+  width:100%;
+}
 .hero-eyebrow{
   font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;
   color:var(--naranja);margin-bottom:0.75rem;font-weight:500;
@@ -90,6 +116,7 @@ header{
   font-size:clamp(1.8rem,4vw,3rem);
   font-weight:700;line-height:1.1;
   color:var(--crema);margin-bottom:0.75rem;
+  text-shadow:0 2px 12px rgba(0,0,0,0.8);
 }
 .hero h1 em{color:var(--naranja);font-style:italic}
 .hero-quote{
@@ -98,6 +125,7 @@ header{
   color:var(--crema-suave);max-width:560px;line-height:1.6;
   border-left:2px solid var(--naranja);padding-left:1rem;
   margin-top:1.2rem;
+  text-shadow:0 1px 6px rgba(0,0,0,0.9);
 }
 .hero-quote cite{display:block;font-style:normal;font-size:0.75rem;margin-top:0.4rem;color:var(--gris);letter-spacing:0.05em}
 
@@ -315,8 +343,8 @@ header{
 
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
-  .hero{padding:2rem 1rem 1.5rem}
-  .hero-inner{padding-left:1.5rem}
+  .hero-inner{padding:1.5rem 1rem 1.5rem 1.5rem}
+  .hero-banner{min-height:200px}
   .filters-bar,.grid-wrap{padding-left:1rem;padding-right:1rem}
   .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 }
@@ -334,14 +362,17 @@ header{
 </header>
 
 <section class="hero">
-  <div class="sprockets" id="sprockets"></div>
-  <div class="hero-inner">
-    <div class="hero-eyebrow">Desde 2007 · Cine Documental</div>
-    <h1>Archivo de <em>562</em><br>documentales</h1>
-    <blockquote class="hero-quote" id="heroQuote">
-      "Un país que no tiene cine documental es como una familia sin álbum familiar."
-      <cite>— Patricio Guzmán</cite>
-    </blockquote>
+  <div class="hero-banner">
+    <div class="sprockets" id="sprockets"></div>
+    <img src="banner-ndh.jpg" alt="Naranjas de Hiroshima — 18 Aniversario">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Desde 2007 · Cine Documental</div>
+      <h1>Archivo de <em>562</em><br>documentales</h1>
+      <blockquote class="hero-quote" id="heroQuote">
+        "Un país que no tiene cine documental es como una familia sin álbum familiar."
+        <cite>— Patricio Guzmán</cite>
+      </blockquote>
+    </div>
   </div>
 </section>
 
