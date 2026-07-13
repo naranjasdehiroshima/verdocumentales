@@ -1,11 +1,9 @@
-name: Actualizar catálogo NdH
+name: Actualizar catalogo NdH
 
 on:
   schedule:
-    # Cada lunes a las 6am UTC (1am Ciudad de México)
     - cron: '0 6 * * 1'
   workflow_dispatch:
-    # También se puede lanzar manualmente desde GitHub Actions
 
 jobs:
   build:
@@ -32,5 +30,5 @@ jobs:
           git config user.name "NdH Bot"
           git config user.email "ndh-bot@naranjasdehiroshima.com"
           git add catalog.json
-          git diff --staged --quiet || git commit -m "Actualizar catálogo - $(date -u '+%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Actualizar catalogo - $(date -u '+%Y-%m-%d')"
           git push
