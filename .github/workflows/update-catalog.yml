@@ -1,6 +1,6 @@
 name: Actualizar catalogo NdH
 
-on:
+"on":
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-     permissions:
+    permissions:
       contents: write
     steps:
       - name: Checkout repo
